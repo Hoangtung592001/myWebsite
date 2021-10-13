@@ -1,0 +1,20 @@
+<table class="table">
+    <thead>
+        <tr>
+        <th scope="col">userId</th>
+        <th scope="col">username</th>
+        <th scope="col">password</th>
+        <th scope="col">Họ và Tên</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each users}}
+        <tr>
+        <th scope="row">{{this.userId}}</th>
+        <td>{{this.username}}</td>
+        <td>{{this.password}}</td>
+        <td>{{this.name}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

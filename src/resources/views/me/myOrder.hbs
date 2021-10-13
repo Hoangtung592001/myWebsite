@@ -1,0 +1,111 @@
+<div class="grid">
+    <div class="grid__row app__content">
+        <div class="grid__column-2">
+            <h3>olegion2001</h3>
+            <a href=>Sửa hồ sơ</a>
+            <div>
+                <a href="">Tài khoản của tôi</a>   
+            </div>
+            <div>
+                <a href="">Hồ sơ</a>   
+            </div>
+            <div>
+                <a href="">Đổi mật khẩu</a>   
+            </div>
+            <div>
+                <a href="">Đơn mua</a>   
+            </div>
+            <div>
+                <a href="">Thông báo</a>
+            </div>
+        </div>
+        
+        <div class="grid__column-10">
+            <button class="home-filter__btn btn home-filter__btn-confirm">Chờ xác nhận</button>
+            <button class="home-filter__btn btn home-filter__btn-purchase">Đã mua</button>
+            <div class="">
+                <ul class="header__cart-list-item-inMyorder-ordered">
+                    <h3>Sản phẩm trong giỏ hàng</h3>
+                      <!-- C -->
+                    {{#each confirmProducts}}
+                    <li class="header__cart-item">
+                        <img src="{{this.image}}" alt="" class="header__cart-img">
+                        <div class="header__cart-item-info">
+                            <div class="header__cart-item-head">
+                                <h5 class="header__cart-item-name">{{this.productName}}</hh5>
+                                <div class="header__cart-item-price-wrap">
+                                    <span class="header__cart-item-price">{{values this.buyPrice}}</span>
+                                    <span class="header__cart-item-multiply">x</span>
+                                    <span class="header__cart-item-quantity">{{this.quantityOrdered}}</span>
+                                </div>
+                            </div>
+
+                            <div class="header__cart-item-body">
+                                <span class="header__cart-item-description">
+                                    Phân loại: {{this.productline}}
+                                </span>
+                                <span class="header__cart-item-remove">
+                                    Xóa
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                    {{/each}}
+                </ul>
+                {{!-- purchasedProducts --}}
+                <ul class="header__cart-list-item-inMyorder-purchased">
+                    <h3>Sản phẩm đã mua</h3>
+                      <!-- C -->
+                    {{#each purchasedProducts}}
+                    <li class="header__cart-item">
+                        <img src="{{this.image}}" alt="" class="header__cart-img">
+                        <div class="header__cart-item-info">
+                            <div class="header__cart-item-head">
+                                <h5 class="header__cart-item-name">{{this.productName}}</hh5>
+                                <div class="header__cart-item-price-wrap">
+                                    <span class="header__cart-item-price">{{values this.buyPrice}}</span>
+                                    <span class="header__cart-item-multiply">x</span>
+                                    <span class="header__cart-item-quantity">{{this.quantityOrdered}}</span>
+                                </div>
+                            </div>
+
+                            <div class="header__cart-item-body">
+                                <span class="header__cart-item-description">
+                                    Phân loại: {{this.productline}}
+                                </span>
+                                <span class="header__cart-item-remove">
+                                    Xóa
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const confirmBtn = document.querySelector('.home-filter__btn-confirm');
+        const purchaseBtn = document.querySelector('.home-filter__btn-purchase');
+        const orderedList = document.querySelector('.header__cart-list-item-inMyorder-ordered');
+        const purchasedList = document.querySelector('.header__cart-list-item-inMyorder-purchased');
+        console.log(orderedList, purchasedList);
+        confirmBtn.onclick = function() {
+            purchaseBtn.classList.remove('btn--primary');
+            confirmBtn.classList.add('btn--primary');
+            orderedList.style.display = 'block';
+            purchasedList.style.display = 'none';
+        }
+
+        purchaseBtn.onclick = function() {
+            confirmBtn.classList.remove('btn--primary');
+            purchaseBtn.classList.add('btn--primary');
+            purchasedList.style.display = 'block';
+            orderedList.style.display = 'none';
+        }
+    })
+</script>
+    

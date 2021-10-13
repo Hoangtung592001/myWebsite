@@ -1,0 +1,50 @@
+<div class="grid">
+    <div class="grid__row app__content">
+        {{#with product}}
+        <div class="grid__column-4 ">
+            <img class="purchase-img" src="{{image}}" alt="">
+        </div>
+
+        <div class="grid__column-8">
+            <h1>{{productName}}</h1>
+            <div class="home-product-item__rating">
+                <i class="home-product-item__star--gold fas fa-star"></i>
+                <i class="home-product-item__star--gold fas fa-star"></i>
+                <i class="home-product-item__star--gold fas fa-star"></i>
+                <i class="home-product-item__star--gold fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+            <h3>{{buyPrice}}</h3>
+            <h3>Số lượng còn trong kho: {{quantityInStock}}</h3>
+            <form method="POST" action="/buying/add_to_cart/{{productCode}}" id="formSubmitProduct">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Số lượng</label>
+                    <input type="number" name="quantityOrdered" class="form-control" placeholder="Nhập số lượng">
+                    <span class="warningInvalidQuantity"></span>
+                </div>
+                <button type="submit" class="home-filter__btn btn btn--primary">Mua Ngay</button>
+            </form>
+        </div>
+        {{/with}}
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const formSubmitProduct = document.getElementById('formSubmitProduct');
+        const inputQuantity = document.querySelector('input[name="quantityOrdered"]');
+        const warningText = document.querySelector('.warningInvalidQuantity');
+        inputQuantity.oninput = function() {
+            warningText.innerText = '';
+        }
+        formSubmitProduct.onsubmit = function(e) {
+            e.preventDefault();
+            if (inputQuantity.value <= 0) {
+                warningText.innerText = 'Số lượng không hợp lệ!';
+            }
+            if (inputQuantity.value > 0) {
+                formSubmitProduct.submit();
+            }
+        }
+    })
+</script>
