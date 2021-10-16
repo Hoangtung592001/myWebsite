@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const crypto = require("crypto");
 const paginating = require('../function/pagination');
+const isLoggedIn = require('../middlewares/isLogged_in');
 // const uuidv4 = require("uuid/v4");
 // const jwt = require('jsonwebtoken');
 // const dotenv = require('dotenv');
@@ -28,17 +29,11 @@ class MeController {
 
     // [GET] /me/order
     order(req, res, next) {
-        const user = req.user;
-        // const sql = `SELECT * FROM` + 
-        // ` (SELECT orders.orderNumber, customerId, ord.productCode, ord.quantityOrdered, ord.priceEach` +
-        // ` FROM orders join orderdetails as ord on orders.orderNumber = ord.orderNumber` +
-        // ` WHERE customerId = ${user.userId})` +
-        // ` as ord1 join products where ord1.productCode = products.productCode;`;
-
-        
-        const conFirmSql = `SELECT * FROM products join (SELECT o.productCode, quantityOrdered, customerId FROM` + 
-        ` ordercart o inner join products p on o.productCode = p.productCode WHERE customerId = ${user.userId})` + 
-        `ord where ord.productCode = products.productCode;`
+        const user = req.user;        
+        const conFirmSql = `SELECT *, sum(o.quantityOrdered) as quantity FROM ordercart o` +
+        ` join products on o.productCode = products.productCode` +
+        ` WHERE customerId = ${user.userId}` +
+        ` GROUP BY o.productCode;`
 
         // `WHERE userId = ${user.userId}`;
         db.query(conFirmSql, (err, confirmProducts) => {
@@ -48,8 +43,17 @@ class MeController {
             ` WHERE orders.customerId = ${user.userId};`
             // res.json(products);
             db.query(purchasedSql, (err, purchasedProducts) => {
-                res.render('me/myOrder', { confirmProducts: confirmProducts, purchasedProducts: purchasedProducts});
-
+                const totalSumQuery = `SELECT SUM(o.quantityOrdered * o.priceEach * (100 - p.discount) / 100) as totalCost` +
+                ` from ordercart o` + 
+                ` join products p on o.productCode = p.productCode` + 
+                ` where o.customerId = ${req.user.userId};`
+                db.query(totalSumQuery, (err, totalSum) => {
+                    // res.json({totalCost: totalSum});
+                    res.render('me/myOrder', { 
+                        confirmProducts: confirmProducts, 
+                        purchasedProducts: purchasedProducts, 
+                        totalCost: totalSum});
+                })
             })
         })
     }
@@ -74,9 +78,6 @@ class MeController {
         const sql = `INSERT INTO products VALUES(` +
         `"${randomId}", "${body.productName}", "${body.productline}", ${body.quantityInStock}, ${body.buyPrice}, ` +
         `"${body.image}", "${body.origin}", ${body.discount}, "1", 0, ${req.user.userId})`;
-        // const sql = `INSERT INTO products VALUES(` +
-        // `"${randomId}", "Áo Man City", "Áo", 100, 120000, ` +
-        // `"https://cf.shopee.vn/file/d22c79de0126bd2845ea21d663471a86", "Hàn Quốc", 20, "1", 0, ${req.user.userId})`;
         db.query(sql, function(err, products) {
             if (err) throw err;
             res.redirect('/me/sale');
@@ -95,6 +96,130 @@ class MeController {
             res.render('me/user_list', { users });
         });
     };
+
+    confirmPurchase(req, res, next) {
+        const maxSQL = 'SELECT MAX(orderNumber) as max FROM orderdetails';
+        let confirmedProducts = req.body.confirmedProduct;
+        if (typeof confirmedProducts !== 'object') {
+            confirmedProducts = [confirmedProducts];
+        }
+        db.query(maxSQL, (err, max) => {
+            let maxOrder = max[0].max;
+            maxOrder++;
+            let resultSQL = ``;
+            const addOrdersSQL = `INSERT INTO orders ` +
+                    `VALUES(${maxOrder}, "2002-02-20", "2002-02-20",` +
+                    ` "2002-02-20", "Sucess", "", ${req.user.userId}, "Thuận Thành"); `;
+            db.query(addOrdersSQL);
+            confirmedProducts.forEach(confirmedProduct => {
+                // res.json({confirmedProduct: confirmedProduct});
+                const findSQL = `SELECT * FROM ordercart WHERE customerId = ${req.user.userId}` +
+                ` AND productCode = "${confirmedProduct}"`;
+                db.query(findSQL, (err, orderedProduct) => {
+                    // res.json({orderedProduct});
+                    // Add to purchased
+                    orderedProduct = Array.from(orderedProduct)[0];
+                    const addOrderdetailsSQL =` INSERT INTO orderdetails` +
+                    ` VALUES(${maxOrder}, "${confirmedProduct}", ${orderedProduct.quantityOrdered}, ${orderedProduct.priceEach}); `;
+                    const deleteOrderCart = ` DELETE FROM ordercart WHERE customerId = ${req.user.userId} AND productCode = "${confirmedProduct}"; `;
+                    const findProductSQL = `SELECT * FROM products WHERE productCode = "${confirmedProduct}"`;
+                    db.query(findProductSQL, (err, product) => {
+                        product = Array.from(product)[0];
+                        const quantityInstockNew = Number(Number(product.quantityInStock) - Number(orderedProduct.quantityOrdered));
+                        const soldQuantityNew = Number(Number(product.soldQuantity) + Number(orderedProduct.quantityOrdered));
+                        const updateProductSQL = `UPDATE products` +
+                        ` SET quantityInStock = ${quantityInstockNew},` +
+                        ` soldQuantity = ${soldQuantityNew} ` +
+                        `WHERE productCode = "${confirmedProduct}"`;
+                        db.query(updateProductSQL);
+                    }) 
+                    
+                    db.query(addOrderdetailsSQL);
+                    db.query(deleteOrderCart);
+                })
+            })
+        })
+        res.redirect('back');
+        // const sql = `SELECT * FROM ordercart WHERE customerId = ${req.user.userId} AND productCode = "${}"`
+    };
+
+    deleteConfirmProducts(req, res, next) {
+        const deleteQuery = `DELETE FROM ordercart WHERE` +
+        ` productCode = "${req.params.productCode}" AND customerId = ${req.user.userId}`;
+        db.query(deleteQuery);
+        res.redirect('back');
+    }
+
+    productInfo(req, res, next) {
+        const findProductQuery = `SELECT * FROM products WHERE productCode = "${req.params.productCode}"`;
+        db.query(findProductQuery, (err, product) => {
+            product = Array.from(product)[0];
+            res.render('me/productInfo', {product: product});
+        })
+    }
+
+    editProducts(req, res, next) {
+        // res.json({product: req.body});
+        const updateSQL = `UPDATE products` + 
+        ` SET productName = "${req.body.productName}",` +
+        ` productline = "${req.body.productline}",` +
+        ` quantityInStock = ${req.body.quantityInStock},` +
+        ` buyPrice = ${req.body.buyPrice},` +
+        ` image = "${req.body.image}",` +
+        ` origin = "${req.body.origin}",` +
+        ` discount = ${req.body.discount}` +
+        ` WHERE productCode = "${req.params.productCode}"`
+        const updateOrdercart = `UPDATE ordercart` +
+        ` SET priceEach = ${req.body.buyPrice}` + 
+        ` WHERE productCode = "${req.params.productCode}"`;
+        db.query(updateSQL);
+        db.query(updateOrdercart);
+        res.redirect('back');
+    }
+
+    deletePublishedProducts(req, res, next) {
+        const deleteSQL = `DELETE FROM products WHERE productCode = "${req.params.productCode}"`;
+        db.query(deleteSQL);
+        res.redirect('/me/store');
+    }
+
+    changePasswordSite(req, res, next) {
+        const findUserSQL = `SELECT * FROM users WHERE userId = '${req.user.userId}'`;
+        db.query(findUserSQL, (err, user) => {
+            user = Array.from(user)[0];
+            res.render('me/change_password', {user: user});
+        });
+    }
+
+    change_password(req, res, next) {
+        const updatePasswordSQL = `UPDATE users` + 
+        ` SET password = "${req.params.password}"` +
+        ` WHERE userId = ${req.user.userId}`;
+        db.query(updatePasswordSQL);
+        res.redirect('/');
+    }
+
+    destroyUser(req, res, next) {
+        let deleteWantedUserIds = req.body.userId;
+        if (typeof deleteWantedUserIds !== 'object') {
+            deleteWantedUserIds = [deleteWantedUserIds];
+        }
+        if (!deleteWantedUserIds[0]) {
+            res.redirect('/');
+            return;
+        }
+        deleteWantedUserIds.forEach(deleteWantedUserId => {
+            const deleteUserSQL = `DELETE FROM users WHERE userId = ${deleteWantedUserId}`;
+            db.query(deleteUserSQL);
+        })
+        res.redirect('back');
+    }
+
+    deleteProductsByAdmin(req, res, next) {
+        const deleteProductByAdminSQL = `DELETE FROM products WHERE productCode = "${req.params.productCode}"`;
+        db.query(deleteProductByAdminSQL);
+        res.redirect('/');
+    }
 };
 
 

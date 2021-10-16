@@ -23,18 +23,20 @@
         <div class="grid__column-10">
             <button class="home-filter__btn btn home-filter__btn-confirm">Chờ xác nhận</button>
             <button class="home-filter__btn btn home-filter__btn-purchase">Đã mua</button>
-            <div class="">
+            <form action="" id="confirm-purchase-form" method="POST">
                 <ul class="header__cart-list-item-inMyorder-ordered">
                     <h3>Sản phẩm trong giỏ hàng</h3>
+                    <h4 class="no-product__warning"></h4>
                       <!-- C -->
                     {{#each confirmProducts}}
                     <li class="header__cart-item">
+                        <input class="check-purchase" type="checkbox" value="{{this.productCode}}" name="confirmedProduct">
                         <img src="{{this.image}}" alt="" class="header__cart-img">
                         <div class="header__cart-item-info">
                             <div class="header__cart-item-head">
                                 <h5 class="header__cart-item-name">{{this.productName}}</hh5>
                                 <div class="header__cart-item-price-wrap">
-                                    <span class="header__cart-item-price">{{values this.buyPrice}}</span>
+                                    <span class="header__cart-item-price">{{values (discountValues this.buyPrice this.discount) }}</span>
                                     <span class="header__cart-item-multiply">x</span>
                                     <span class="header__cart-item-quantity">{{this.quantityOrdered}}</span>
                                 </div>
@@ -44,13 +46,18 @@
                                 <span class="header__cart-item-description">
                                     Phân loại: {{this.productline}}
                                 </span>
-                                <span class="header__cart-item-remove">
+                                <button class="header__cart-item-remove header__cart-item-remove-confirmProducts">
                                     Xóa
-                                </span>
+                                </button>
                             </div>
                         </div>
                     </li>
                     {{/each}}
+                    {{#each totalCost}}
+                    <h3>Tổng số tiền là: {{values this.totalCost}}</h3>
+                    {{/each}}
+
+                    <button class="home-filter__btn btn btn--primary home-filter__btn-confirm-purchase">Đặt Hàng</button>
                 </ul>
                 {{!-- purchasedProducts --}}
                 <ul class="header__cart-list-item-inMyorder-purchased">
@@ -73,26 +80,37 @@
                                 <span class="header__cart-item-description">
                                     Phân loại: {{this.productline}}
                                 </span>
-                                <span class="header__cart-item-remove">
-                                    Xóa
-                                </span>
                             </div>
                         </div>
                     </li>
                     {{/each}}
                 </ul>
-            </div>
+            </form>
         </div>
     </div>
 </div>
 
+<form action="" id="confirm-purchase-form" method="POST">
+
+</form>
+
+<form action="" id="delete-confirmProducts" method="POST">
+
+</form>
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        const confirmPurchaseForm = document.getElementById('confirm-purchase-form');
+        const deleteConfirmProductsForm = document.getElementById('delete-confirmProducts');
         const confirmBtn = document.querySelector('.home-filter__btn-confirm');
         const purchaseBtn = document.querySelector('.home-filter__btn-purchase');
         const orderedList = document.querySelector('.header__cart-list-item-inMyorder-ordered');
         const purchasedList = document.querySelector('.header__cart-list-item-inMyorder-purchased');
-        console.log(orderedList, purchasedList);
+        const checkPurchase = document.querySelectorAll('.check-purchase');
+        const confirmPurchaseBtn = document.querySelector('.home-filter__btn-confirm-purchase');
+        const inputItem = $('input[name="confirmedProduct"]:checked');
+        const noProductsWarning = document.querySelector('.no-product__warning');
+        const deleteConfirmProductsBtns = document.querySelectorAll('.header__cart-item-remove-confirmProducts');
         confirmBtn.onclick = function() {
             purchaseBtn.classList.remove('btn--primary');
             confirmBtn.classList.add('btn--primary');
@@ -106,6 +124,33 @@
             purchasedList.style.display = 'block';
             orderedList.style.display = 'none';
         }
+        confirmPurchaseForm.onsubmit = function(e) {
+            e.preventDefault();
+        }
+        confirmPurchaseBtn.onclick = function() {
+            console.log(inputItem);
+            if (inputItem.length === 0) {
+                noProductsWarning.innerText = 'Bạn chưa chọn sản phẩm nào';
+                setTimeout(function() {
+                    noProductsWarning.innerText = '';
+                }, 3000);  
+            }
+            if (inputItem.length > 0) {
+                confirmPurchaseForm.action = '/me/order/confirmPurchase';
+                confirmPurchaseForm.submit();
+            }
+        }
+
+        Array.from(deleteConfirmProductsBtns).forEach(deleteConfirmProductsBtn => {
+            deleteConfirmProductsBtn.onclick = function(e) {
+                let nodeParent = deleteConfirmProductsBtn.parentNode.parentNode.parentNode;
+                const inputElementChosen = nodeParent.querySelector('input');
+                console.log(inputElementChosen.value);
+                deleteConfirmProductsForm.action = '/me/delete_confirm_product/' + inputElementChosen.value + '?_method=DELETE';
+                deleteConfirmProductsForm.submit();
+            }
+        })
     })
+
 </script>
     

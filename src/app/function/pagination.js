@@ -4,6 +4,10 @@ module.exports = function(req, res, next, sql, view, url) {
     const resultPerPage = 30;
     db.query(sql, function(err, products) {
         if (err) throw err;
+        if (products.length === 0) {
+            res.render(view);
+            return;
+        }
         const numOfProducts = products.length;
         const numberOfPages = Math.ceil(numOfProducts / resultPerPage);
         let page = req.query.page ? Number(req.query.page) : 1;

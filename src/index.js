@@ -6,6 +6,7 @@ const express = require('express');
 const morgan = require('morgan');
 const handlebars = require('express-handlebars');
 const route = require('./routes');
+const methodOverride = require('method-override');
 const app = express();
 const cookieParser = require('cookie-parser');
 
@@ -22,7 +23,7 @@ app.use(
 app.use(express.json());
 // Custom middlewares
 // app.use(sortMiddleware);
-// app.use(methodOverride('_method'));
+app.use(methodOverride('_method'));
 // HTTP loggers
 app.use(morgan('combined'));
 // Template engine
@@ -78,47 +79,12 @@ app.engine(
                     `
                 }
                 return result;
-            }
+            },
+            isAllTrue: (a, b) => a && b,
         }
     }),
     );
-/*
-                        <li class="pagination-item">
-                            <a href="" class="pagination-item__link">
-                                <i class="pagination-item__icon fas fa-chevron-left"></i>
-                            </a>
-                        </li>
-                        <li class="pagination-item">
-                            <a href="/?page=3" class="pagination-item__link">3</a>
-                        </li>
-
-                        <li class="pagination-item">
-                            <a href="" class="pagination-item__link">
-                                <i class="pagination-item__icon fas fa-chevron-right"></i>
-                            </a>
-                        </li>
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 // Dat cai ung dung su dung view engine la handlebars
 app.set('view engine', 'hbs');
 // Set direction of views

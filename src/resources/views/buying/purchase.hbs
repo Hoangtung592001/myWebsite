@@ -14,7 +14,7 @@
                 <i class="home-product-item__star--gold fas fa-star"></i>
                 <i class="fas fa-star"></i>
             </div>
-            <h3>{{buyPrice}}</h3>
+            <h3>{{values (discountValues buyPrice discount)}} đ</h3>
             <h3>Số lượng còn trong kho: {{quantityInStock}}</h3>
             <form method="POST" action="/buying/add_to_cart/{{productCode}}" id="formSubmitProduct">
                 <div class="form-group">
@@ -24,10 +24,14 @@
                 </div>
                 <button type="submit" class="home-filter__btn btn btn--primary">Mua Ngay</button>
             </form>
+            <form action="/me/admin/deleteProduct/{{productCode}}?_method=DELETE" method="POST">
+                <button type="submit">Xóa sản phẩm</button>
+            </form>
         </div>
         {{/with}}
     </div>
 </div>
+
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {

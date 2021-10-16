@@ -17,8 +17,31 @@ class SiteController {
     // [GET] /
     index(req, res, next) {
         // req, res, next, sql, home
-        let sql = 'SELECT * FROM products JOIN shoptype on products.shopTypeID = shoptype.shopTypeID';
-        paginating(req, res, next, sql, 'home', '/');
+        if (req.query.hasOwnProperty('sort')) {
+            const condition = req.query.field;
+            const type = req.query.type;
+            let sql = `SELECT * FROM products JOIN shoptype on products.shopTypeID = shoptype.shopTypeID` +
+            ` ORDER BY ${condition} ${type}`;
+            db.query(sql, (err, products) => {
+                res.render('home', {products});
+            })
+        }
+        else if (req.query.hasOwnProperty('productline')) {
+            const condition = req.query.type;
+            let sql = `SELECT * FROM products JOIN shoptype on products.shopTypeID = shoptype.shopTypeID` +
+            ` WHERE productline = "${condition}"`;
+            db.query(sql, (err, products) => {
+                res.render('home', {products});
+            })
+        }
+        else {
+            let sql = 'SELECT * FROM products JOIN shoptype on products.shopTypeID = shoptype.shopTypeID';
+            paginating(req, res, next, sql, 'home', '/');
+        }
+    }
+
+    sort(req, res, next) {
+        res.render('home');
     }
 
     signup(req, res, next) {
@@ -57,8 +80,13 @@ class SiteController {
                     isLoggedIn = true;
                 }
             })
-
+            if (!isLoggedIn) {
+                res.send('Nhập sai tài khoản hoặc mật khẩu!');
+            }
         });
+        // if (!isLoggedIn) {
+        //     res.send('Nhập sai tài khoản hoặc mật khẩu!');
+        // }
 
     }
 

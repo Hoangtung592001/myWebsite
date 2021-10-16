@@ -8,6 +8,7 @@ module.exports = function(req, res, next) {
 
     if (!accessToken) {
         res.locals.access = false;
+        // res.send('Bạn chưa đăng nhập!');
     }
     else {
         res.locals.access = true;
@@ -26,4 +27,5 @@ module.exports = function(req, res, next) {
         })
     }
     next();
+    
 }

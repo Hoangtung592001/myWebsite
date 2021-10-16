@@ -45,35 +45,35 @@
                         Danh mục</h3>
                     <ul class="categoty-list">
                         <li class="category-item">
-                            <a href="" class="category-item__link">Áo</a>
+                            <a href="/?productline&type=Áo" class="category-item__link">Áo</a>
                         </li>
                         
                         <li class="category-item">
-                            <a href="" class="category-item__link">Điện Thoại</a>
+                            <a href="/?productline&type=Điện Thoại" class="category-item__link">Điện Thoại</a>
                         </li>
 
                         <li class="category-item">
-                            <a href="" class="category-item__link">Đồng Hồ</a>
+                            <a href="/?productline&type=Đồng Hồ" class="category-item__link">Đồng Hồ</a>
                         </li>
 
                         <li class="category-item">
-                            <a href="" class="category-item__link">Giầy, Dép</a>
+                            <a href="/?productline&type=Giầy, Dép" class="category-item__link">Giầy, Dép</a>
                         </li>
 
                         <li class="category-item">
-                            <a href="" class="category-item__link">Mũ</a>
+                            <a href="/?productline&type=Mũ" class="category-item__link">Mũ</a>
                         </li>
 
                         <li class="category-item">
-                            <a href="" class="category-item__link">Phụ Kiện</a>
+                            <a href="/?productline&type=Phụ Kiện" class="category-item__link">Phụ Kiện</a>
                         </li>
 
                         <li class="category-item">
-                            <a href="" class="category-item__link">Quần</a>
+                            <a href="/?productline&type=Quần" class="category-item__link">Quần</a>
                         </li>
 
                         <li class="category-item">
-                            <a href="" class="category-item__link">Túi Xách</a>
+                            <a href="/?productline&type=Túi Xách" class="category-item__link">Túi Xách</a>
                         </li>
                     </ul>
                 </nav>
@@ -83,19 +83,25 @@
             <div class="grid__column-10">
                 <div class="home-filter">
                     <span class="home-filter__label">Sắp xếp theo</span>
-                    <button class="home-filter__btn btn">Phổ biến</button>
-                    <button class="home-filter__btn btn btn--primary">Mới nhất</button>
-                    <button class="home-filter__btn btn">Bán chạy</button>
+                    {{!-- <button class="home-filter__btn btn home-filter__btn-popular">
+                        <a href="/?sort&type=popular">Phổ biến</a>
+                    </button>--}}
+                    {{!-- <button class="home-filter__btn btn home-filter__btn-new">
+                        <a href="/?sort&type=new/?page&page=1">Mới nhất</a>
+                    </button>  --}}
+                    <button class="home-filter__btn btn home-filter__btn-bestsell">
+                        <a href="/?sort&field=soldQuantity&type=DESC">Bsn chạy</a>
+                    </button>
                     <div class="select-input">
                         <span class="select-input__label">Giá</span>
                         <i class="select-input__icon fas fa-chevron-down"></i>
                         <ul class="select-input__list">
                             <li class="select-input__item">
-                                <a href="" class="select-input__link">Giá: Thấp đến Cao</a>
+                                <a href="/?sort&field=buyPrice&type=ASC" class="select-input__link">Giá: Thấp đến Cao</a>
                             </li>
 
                             <li class="select-input__item">
-                                <a href="" class="select-input__link">Giá: Cao đến Thấp</a>
+                                <a href="/?sort&field=buyPrice&type=DESC" class="select-input__link">Giá: Cao đến Thấp</a>
                             </li>
                         </ul>
                     </div>
@@ -196,18 +202,46 @@
         </div>
     </div>
 
+<form action="" class="sortForm" method="GET"></form>
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const navBtns = document.querySelectorAll('.category-item');
+        const popularBtn = document.querySelector('.home-filter__btn-popular'); 
+        const newBtn = document.querySelector('.home-filter__btn-new');
+        const bestsellBtn = document.querySelector('.home-filter__btn-bestsell');
+        const sortForm = document.querySelector('.sortForm');
+        //  
         Array.from(navBtns).forEach(function(navBtn) {
             navBtn.onclick = function() {
                 Array.from(navBtns).forEach(function(navBtnchild) {
                     navBtnchild.classList.remove('category-item--active');
                 })
             navBtn.classList.add('category-item--active')
-            }
-        })
+                }
+            })
+        // Handle click
+        popularBtn.onclick = function() {
+            newBtn.classList.remove('btn--primary');
+            bestsellBtn.classList.remove('btn--primary');
+            popularBtn.classList.add('btn--primary');
+
+        }
+
+        newBtn.onclick = function() {
+            newBtn.classList.add('btn--primary');
+            bestsellBtn.classList.remove('btn--primary');
+            popularBtn.classList.remove('btn--primary');
+
+        }
+
+        bestsellBtn.onclick = function() {
+            newBtn.classList.remove('btn--primary');
+            bestsellBtn.classList.add('btn--primary');
+            popularBtn.classList.remove('btn--primary');
+
+        }
     }
-        )
+    )
 </script>
 

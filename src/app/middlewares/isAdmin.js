@@ -9,7 +9,7 @@ module.exports = function(req, res, next) {
         res.send("Bạn không có quyền truy cập miền này");
     }
     else {
-        
+        res.locals.isAdmin = true;
         next();
     }
 }
