@@ -15,6 +15,7 @@ db.connect();
 
 class SiteController {
     // [GET] /
+    
     index(req, res, next) {
         // req, res, next, sql, home
         if (req.query.hasOwnProperty('sort')) {
@@ -45,19 +46,20 @@ class SiteController {
     }
 
     signup(req, res, next) {
-        const sqlFind = "SELECT * FROM users";
+        const sqlFind = `SELECT * FROM users WHERE username = "${req.body.username}"`;
         db.query(sqlFind, function (err, users) {
-            users.forEach(function (user) {
-                if (user.username === req.body.username) {
-                    res.send("Tài khoản đã có người sử dụng");
-                    return;
-                }
-            })
-        })
-        const sqlInsert = `INSERT INTO users VALUES((select MAX(userId) from users as b) + 1, "${req.body.username}", "${req.body.password}", "${req.body.nameWeb}", "user");`
-        db.query(sqlInsert, function(err, products) {
-            if (err) throw err;
-            res.redirect('/');
+            users = Array.from(users)[0];
+            if (users) {
+                res.status(404).send('Tài khoản đã có người sử dụng!');
+                return;
+            }
+            else {
+                const sqlInsert = `INSERT INTO users VALUES((select MAX(userId) from users as b) + 1, "${req.body.username}", "${req.body.password}", "${req.body.nameWeb}", "user");`
+                db.query(sqlInsert, function(err, products) {
+                    if (err) throw err;
+                    res.redirect('/');
+                })
+            }
         })
     }
 
@@ -88,6 +90,19 @@ class SiteController {
         //     res.send('Nhập sai tài khoản hoặc mật khẩu!');
         // }
 
+    }
+    isLoginTrue(req, res, next) {
+        res.json({req: req.body});
+        const sqlFind = `SELECT * FROM users WHERE username = '${req.body.username} AND password = ${req.body.password}`;
+        db.query(sqlFind, (err, result) => {
+            result = Array.from(result)[0];
+            if (result) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        });
     }
 
 }

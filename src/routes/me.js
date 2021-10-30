@@ -35,6 +35,8 @@ router.post('/post_for_sale', isLoggedIn, meController.post_for_sale)
 
 router.get('/store', isLoggedIn, meController.store);
 
+router.get('/added_to_cart', isLoggedIn, meController.get_added_to_cart);
+
 router.get('/:productCode', isLoggedIn, meController.productInfo);
 
 

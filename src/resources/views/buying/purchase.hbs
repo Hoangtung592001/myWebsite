@@ -20,7 +20,7 @@
                 <div class="form-group">
                     <label for="exampleInputEmail1">Số lượng</label>
                     <input type="number" name="quantityOrdered" class="form-control" placeholder="Nhập số lượng">
-                    <span class="warningInvalidQuantity"></span>
+                    <span class="warningInvalid"></span>
                 </div>
                 <button type="submit" class="home-filter__btn btn btn--primary">Mua Ngay</button>
             </form>
@@ -37,7 +37,7 @@
     document.addEventListener("DOMContentLoaded", function() {
         const formSubmitProduct = document.getElementById('formSubmitProduct');
         const inputQuantity = document.querySelector('input[name="quantityOrdered"]');
-        const warningText = document.querySelector('.warningInvalidQuantity');
+        const warningText = document.querySelector('.warningInvalid');
         inputQuantity.oninput = function() {
             warningText.innerText = '';
         }

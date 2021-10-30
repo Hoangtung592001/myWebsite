@@ -196,7 +196,8 @@ class MeController {
         ` SET password = "${req.params.password}"` +
         ` WHERE userId = ${req.user.userId}`;
         db.query(updatePasswordSQL);
-        res.redirect('/');
+        req.isChangePassword = true;
+        res.redirect('/me/logout');
     }
 
     destroyUser(req, res, next) {
@@ -219,6 +220,15 @@ class MeController {
         const deleteProductByAdminSQL = `DELETE FROM products WHERE productCode = "${req.params.productCode}"`;
         db.query(deleteProductByAdminSQL);
         res.redirect('/');
+    }
+
+    get_added_to_cart(req, res, next) {
+        const sql = `SELECT * FROM ordercart join products on ordercart.productCode = products.productCode` +
+                    ` WHERE customerId = ${req.user.userId}`;
+        db.query(sql, (err, products) => {
+            if (err) throw err;
+            res.json({products: products});
+        })
     }
 };
 

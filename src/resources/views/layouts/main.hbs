@@ -112,6 +112,7 @@
                             <div class="auth-from__group">
                                 <input type="password" class="auth-form__input" name="password" placeholder="Mật khẩu của bạn">
                             </div>
+                            <span class="warningInvalid"></span>
                         </div>
 
                         <div class="auth-form__aside">
@@ -155,10 +156,10 @@
 <script>
     
     document.addEventListener("DOMContentLoaded", function() {
-        var loginBtn = document.querySelector('.header__navbar-item-login');
-        var signupBtn = document.querySelector('.header__navbar-item-signup');
-        var modalField = document.querySelector('.modal-login');
-        var authformFields = document.querySelectorAll('.auth-form')
+        const loginBtn = document.querySelector('.header__navbar-item-login');
+        const signupBtn = document.querySelector('.header__navbar-item-signup');
+        const modalField = document.querySelector('.modal-login');
+        const authformFields = document.querySelectorAll('.auth-form')
         const authFormLogin = document.querySelector('.auth-form-login');
         const authFormSignup = document.querySelector('.auth-form-signup');
         const backBtnInForms = document.querySelectorAll('.auth-form__controls-back');
@@ -169,13 +170,25 @@
         const nameWebSignup = authFormSignup.querySelector('input[name="nameWeb"]');
         const switchBtnLogin = authFormLogin.querySelector('.auth-form__switch-btn');
         const switchBtnSignup = authFormSignup.querySelector('.auth-form__switch-btn');
-        
+        const authFormInputUsername = authFormLogin.querySelector('.auth-form__input[name="username"]');
+        const authFormInputPassword = authFormLogin.querySelector('.auth-form__input[name="password"]');
+        const warningInvalidLogin = authFormLogin.querySelector('.warningInvalid');
+        console.log(warningInvalidLogin);
         /*Handle click đăng nhập đăng ký trong form*/
         switchBtnLogin.onclick = function() {
             authFormLogin.classList.remove("openForm");
             authFormSignup.classList.add('openForm');
         }
 
+        authFormInputUsername.oninput = function() {
+            warningInvalidLogin.innerText = '';
+        }
+
+        authFormInputPassword.oninput = function() {
+            warningInvalidLogin.innerText = '';
+        }
+
+        
         switchBtnSignup.onclick = function() {
             authFormSignup.classList.remove('openForm');
             authFormLogin.classList.add("openForm");
@@ -187,14 +200,12 @@
                 modalField.classList.add('open');
                 authFormLogin.classList.add('openForm');
             });
-            
         }
         if (signupBtn) {
             signupBtn.addEventListener('click', function() {
                 modalField.classList.add('open');
                 authFormSignup.classList.add('openForm');
             });
-
         }
 
         modalField.addEventListener('click', function() {
@@ -241,7 +252,27 @@
         authFormLogin.onsubmit = function(e) {
             e.preventDefault();
             authFormLogin.submit();
+            /*fetch('localhost:3000/isLoginTrue', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: authFormInputUsername.value,
+                    password: authFormInputPassword.value
+                })
+            })
+            .then(res => res.json())
+            .then(isTrue => {
+                if (isTrue) {
+                    authFormLogin.submit();
+                }
+                else {
+                    warningInvalidLogin.innerText = 'Bạn nhập sai tài khoản hoặc mật khẩu!';
+                }
+            })*/
         }
+
     })
     
 </script>

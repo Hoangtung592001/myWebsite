@@ -145,11 +145,7 @@
 
         <div class="header__cart">
             <i class="header__cart-icon fas fa-shopping-cart"></i>
-            {{#if numberOfOrders}}
-            <span class="header__cart-notice">{{numberOfOrders}}</span>
-            {{else}}
-            <span class="header__cart-notice">0</span>
-            {{/if}}
+            <span class="header__cart-notice"></span>
             <div class="header__cart-list">
                 <!-- No cart: header__cart-list//no-cart -->
                 <img src="../assets/images/no-cart.png" alt="" class="header__cart-no-cart-img">
@@ -190,7 +186,48 @@
 </div>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const headerCartListItem = document.querySelector('.header__cart-list-item');
+        const headerCartQuantity = document.querySelector('.header__cart-notice');
+        fetch("http://localhost:3000/me/added_to_cart")
+        .then(res => res.json())
+        .then(data => {
+            const products = Array.from(data.products);
+            headerCartQuantity.innerText = `${products.length}`;
+            const htmlProduct = products.map((product) => {
+                return `
+                    <li class="header__cart-item">
+                        <img src="${product.image}" alt="" class="header__cart-img">
+                        <div class="header__cart-item-info">
+                            <div class="header__cart-item-head">
+                                <h5 class="header__cart-item-name">${product.productName}</h5>
+                                <div class="header__cart-item-price-wrap">
+                                    <span class="header__cart-item-price">${product.priceEach}đ</span>
+                                    <span class="header__cart-item-multiply">x</span>
+                                    <span class="header__cart-item-quantity">${product.quantityOrdered}</span>
+                                </div>
+                            </div>
 
+                            <div class="header__cart-item-body">
+                                <span class="header__cart-item-description">
+                                    Phân loại: ${product.productline}
+                                </span>
+                                <span class="header__cart-item-remove">
+                                    Xóa
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                `
+            }).join('');
+            headerCartListItem.innerHTML = htmlProduct;
+            
+        })
+        .catch(err => {
+            headerCartQuantity.innerText = "0";
+        })
+        }
+    )
 </script>
 
 
