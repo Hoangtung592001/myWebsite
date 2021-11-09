@@ -179,7 +179,8 @@ html {
   padding: 5px 0; }
 
 .select-input__link:hover {
-  color: var(--primary-color); }
+  color: var(--primary-color);
+  text-decoration: none; }
 
 .pagination {
   display: flex;
@@ -191,7 +192,8 @@ html {
   color: var(--white-color); }
 
 .pagination-item--active .pagination-item__link:hover {
-  filter: brightness(95%); }
+  filter: brightness(95%);
+  text-decoration: none; }
 
 .pagination-item {
   list-style: none;
@@ -936,6 +938,16 @@ html {
   margin-right: 12px;
   min-width: 90px; }
 
+.home-filter__btn:hover {
+  opacity: 0.5; }
+
+.home-filter__btn-link {
+  color: var(--primary-color); }
+
+.home-filter__btn-link:hover {
+  color: var(--primary-color);
+  text-decoration: none; }
+
 .home-filter__page-num {
   font-size: 1.4rem;
   color: var(--text-color);
@@ -1165,7 +1177,8 @@ i.home-product-item__like-icon-fill {
   align-items: center; }
 
 .footer-item__link:hover {
-  color: var(--primary-color); }
+  color: var(--primary-color);
+  text-decoration: none; }
 
 .footer-item__icon {
   font-size: 1.8rem;

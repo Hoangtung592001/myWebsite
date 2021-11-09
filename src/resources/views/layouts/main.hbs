@@ -53,12 +53,12 @@
 
                             <div class="auth-from__group">
                                 <input name="password-validate" type="password" class="auth-form__input" placeholder="Nhập lại mật khẩu">
-                                <h3 class="auth-form__input-password-validate"></h3>
                             </div>
 
                             <div class="auth-from__group">
                                 <input name="nameWeb" type="text" class="auth-form__input" placeholder="Nhập tên của bạn">
                             </div>
+                            <h3 class="auth-form__input-password-validate"></h3>
                         </div>
 
                         <div class="auth-form__aside">
@@ -180,6 +180,14 @@
             authFormSignup.classList.add('openForm');
         }
 
+        passWordSignup.oninput = function() {
+            validateTextSignup.innerText = '';
+        }
+
+        usernameSignup.oninput = function() {
+            validateTextSignup.innerText = '';
+        }
+
         authFormInputUsername.oninput = function() {
             warningInvalidLogin.innerText = '';
         }
@@ -243,7 +251,25 @@
                 passWordSignupValidate.value === passWordSignup.value &&
                 nameWebSignup.value && passWordSignupValidate.value
             ) {
-                authFormSignup.submit();
+                const data = {
+                    username: usernameSignup.value
+                };
+                fetch('http://localhost:3000/isLoginTrue',{
+                    method: 'post',
+                    body: JSON.stringify(data),
+                    headers: new Headers({
+                        'Content-Type': 'application/json'
+                    })
+                })
+                .then(res => res.json())
+                .then(isTrue => {
+                    if (isTrue.isTrue) {
+                        authFormSignup.submit();
+                    }
+                    else {
+                        validateTextSignup.innerText = 'Tài khoản đã tồn tại!';
+                    }
+                });
             }
         }
 
@@ -251,28 +277,26 @@
 
         authFormLogin.onsubmit = function(e) {
             e.preventDefault();
-            authFormLogin.submit();
-            /*fetch('localhost:3000/isLoginTrue', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: authFormInputUsername.value,
-                    password: authFormInputPassword.value
+            const data = {
+                username: authFormInputUsername.value,
+                password: authFormInputPassword.value
+            }
+            fetch('http://localhost:3000/isLoginTrue',{
+                method: 'post',
+                body: JSON.stringify(data),
+                headers: new Headers({
+                    'Content-Type': 'application/json'
                 })
             })
             .then(res => res.json())
             .then(isTrue => {
-                if (isTrue) {
+                if (isTrue.isTrue) {
                     authFormLogin.submit();
                 }
                 else {
                     warningInvalidLogin.innerText = 'Bạn nhập sai tài khoản hoặc mật khẩu!';
                 }
-            })*/
+            });
         }
-
     })
-    
 </script>

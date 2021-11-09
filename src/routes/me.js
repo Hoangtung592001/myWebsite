@@ -5,6 +5,8 @@ const router = express.Router();
 
 const meController = require('../app/controllers/MeController');
 
+router.get('/get_password', isLoggedIn, meController.get_password);
+
 router.post('/order/confirmPurchase', isLoggedIn, meController.confirmPurchase);
 
 router.get('/change_password_site', isLoggedIn, meController.changePasswordSite);

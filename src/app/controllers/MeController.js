@@ -4,18 +4,7 @@ const dotenv = require('dotenv');
 const crypto = require("crypto");
 const paginating = require('../function/pagination');
 const isLoggedIn = require('../middlewares/isLogged_in');
-// const uuidv4 = require("uuid/v4");
-// const jwt = require('jsonwebtoken');
-// const dotenv = require('dotenv');
 db.connect();
-
-// const mysql = require('mysql');
-// const db = mysql.createConnection({
-//     host     : 'localhost',
-//     user     : 'root',
-//     password : '0865783836',
-//     database : 'sellingwebsite'
-// });
 
 class MeController {
     // [GET] /me
@@ -132,7 +121,7 @@ class MeController {
                         ` soldQuantity = ${soldQuantityNew} ` +
                         `WHERE productCode = "${confirmedProduct}"`;
                         db.query(updateProductSQL);
-                    }) 
+                    })
                     
                     db.query(addOrderdetailsSQL);
                     db.query(deleteOrderCart);
@@ -229,6 +218,15 @@ class MeController {
             if (err) throw err;
             res.json({products: products});
         })
+    }
+
+    get_password(req, res, next) {
+        const sql = `SELECT * FROM users WHERE userId = ${req.user.userId}`;
+        db.query(sql, (err, user) => {
+            if (err) throw err;
+            user = Array.from(user)[0];
+            res.json({ user: user });
+        });
     }
 };
 

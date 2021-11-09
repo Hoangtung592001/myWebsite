@@ -1,6 +1,7 @@
 <div class="grid">
     <div class="grid__row app__content">
         {{#with product}}
+        <input value={{productCode}} name="productCode" style="display:none">
         <div class="grid__column-4 ">
             <img class="purchase-img" src="{{image}}" alt="">
         </div>
@@ -30,17 +31,78 @@
         </div>
         {{/with}}
     </div>
+    {{#with product}}
+    <form class="form-group form__comment">
+            <label for="input__comment">Bình Luận</label>
+            <input type="text" class="form-control" id="input__comment" name="comment" placeholder="Nhập Bình Luân">
+            <button type="submit" class="btn btn-comment btn--primary">Đăng</button>
+    </form>
+    {{/with}}
+    <div class="comment-box">
+        <h1>Đánh Giá Sản Phẩm</h1>
+        {{#each commentProduct}}
+            <h4>{{this.name}}</h4>
+            <p>{{this.comment}}</p>
+        {{/each}}
+    </div>
 </div>
 
-
+<script src="/socket.io/socket.io.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const formSubmitProduct = document.getElementById('formSubmitProduct');
         const inputQuantity = document.querySelector('input[name="quantityOrdered"]');
+        const productCode = document.querySelector('input[name="productCode"]').value;
         const warningText = document.querySelector('.warningInvalid');
+        const formComment = document.querySelector('.form__comment');
+        const commentValue = formComment.querySelector('#input__comment');
+        const submitButtonComment = formComment.querySelector('.btn-comment')
+        const commentBox = document.querySelector('.comment-box');
+        const socket = io();
+        console.log(formComment);   
+        fetch('http://localhost:3000/get_user')
+            .then(res => res.json())
+            .then(user => {
+                const userInfo = user.user
+                userInfo.productCode = productCode;
+                socket.emit('joinProduct', userInfo);
+                
+                formComment.onsubmit = function(e) {
+                    e.preventDefault();
+                    socket.emit('message', { msg: commentValue.value.trim(), userInfo });
+                    fetch(`http://localhost:3000/buying/${productCode}/comment`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            comment: commentValue.value,
+                            productCode: productCode
+                        })
+                    });
+                }
+            })
+        
+        socket.on('chatMessage', ({ msg, userInfo }) => {
+            outputMessage(userInfo.name, msg);
+        });
+        function outputMessage(user, message) {
+            const h4 = document.createElement('h4');
+            const p = document.createElement('p');
+            h4.innerText = user;
+            p.innerText = message;
+            commentBox.appendChild(h4);
+            commentBox.appendChild(p);
+        }        
+
+
+
+        //
+        
         inputQuantity.oninput = function() {
             warningText.innerText = '';
         }
+        
         formSubmitProduct.onsubmit = function(e) {
             e.preventDefault();
             if (inputQuantity.value <= 0) {

@@ -108,7 +108,6 @@
         const purchasedList = document.querySelector('.header__cart-list-item-inMyorder-purchased');
         const checkPurchase = document.querySelectorAll('.check-purchase');
         const confirmPurchaseBtn = document.querySelector('.home-filter__btn-confirm-purchase');
-        const inputItem = $('input[name="confirmedProduct"]:checked');
         const noProductsWarning = document.querySelector('.no-product__warning');
         const deleteConfirmProductsBtns = document.querySelectorAll('.header__cart-item-remove-confirmProducts');
         confirmBtn.onclick = function() {
@@ -128,14 +127,14 @@
             e.preventDefault();
         }
         confirmPurchaseBtn.onclick = function() {
-            console.log(inputItem);
+            const inputItem = document.querySelectorAll('input[name="confirmedProduct"]:checked');
             if (inputItem.length === 0) {
                 noProductsWarning.innerText = 'Bạn chưa chọn sản phẩm nào';
                 setTimeout(function() {
                     noProductsWarning.innerText = '';
-                }, 3000);  
+                }, 3000);
             }
-            if (inputItem.length > 0) {
+            else {
                 confirmPurchaseForm.action = '/me/order/confirmPurchase';
                 confirmPurchaseForm.submit();
             }

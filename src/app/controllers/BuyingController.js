@@ -16,12 +16,27 @@ db.connect();
 class BuyingController {
     // [GET] /buying/:id
     purchase(req, res, next) {
-        const sql = `SELECT * FROM products WHERE productCode = "${req.params.productCode}"`;
-        db.query(sql, function(err, product) {
+        const productSql = 'SELECT * FROM products p' + 
+        ` WHERE p.productCode = "${req.params.productCode}"`;
+        const commentSql = `SELECT * FROM products p` +
+        ` JOIN comments c ON p.productCode = c.productCode` +
+        ` JOIN users u ON c.customerId = u.userId` + 
+        ` WHERE p.productCode = "${req.params.productCode}"`;
+        db.query(productSql, function(err, product) {
             // res.json({product: product});
             product = Array.from(product)[0];
-            res.render('buying/purchase', { product: product });
+            db.query(commentSql, (err, commentProduct) => {
+                res.render('buying/purchase', { product: product, commentProduct: commentProduct});
+            })
         })
+    }
+
+    comment(req, res, next) {
+        const productCode = req.body.productCode;
+        const customerId = Number(req.user.userId);
+        const comment = req.body.comment;
+        const sql = `INSERT INTO comments VALUES(${customerId}, "${productCode}", "${comment}")`;
+        db.query(sql);
     }
     
     // [POST] /buying/addToCart

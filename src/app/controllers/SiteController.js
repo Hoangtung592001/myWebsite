@@ -82,27 +82,37 @@ class SiteController {
                     isLoggedIn = true;
                 }
             })
-            if (!isLoggedIn) {
-                res.send('Nhập sai tài khoản hoặc mật khẩu!');
-            }
         });
-        // if (!isLoggedIn) {
-        //     res.send('Nhập sai tài khoản hoặc mật khẩu!');
-        // }
-
     }
+
     isLoginTrue(req, res, next) {
-        res.json({req: req.body});
-        const sqlFind = `SELECT * FROM users WHERE username = '${req.body.username} AND password = ${req.body.password}`;
+        const sqlFind = `SELECT * FROM users WHERE username = "${req.body.username}" AND password = "${req.body.password}"`;
         db.query(sqlFind, (err, result) => {
-            result = Array.from(result)[0];
-            if (result) {
-                return true;
+            if (err) res.json({ message: "Có lôi!"});
+            if (result[0]) {
+                res.json({ isTrue: true });
             }
             else {
-                return false;
+                res.json({ isTrue: false});
             }
         });
+    }
+
+    isSignupTrue(req, res, next) {
+        const sqlFind = `SELECT * FROM users WHERE username = "${req.body.username}"`;
+        db.query(sqlFind, (err, result) => {
+            if (err) res.json({ message: "Có lôi!"});
+            if (result[0]) {
+                res.json({ isTrue: false });
+            }
+            else {
+                res.json({ isTrue: true });
+            }
+        })
+    }
+
+    getUser(req, res, next) {
+        res.json({ user: req.user });
     }
 
 }

@@ -2,13 +2,18 @@
  *
  */
 const path = require('path');
+const http = require('http');
 const express = require('express');
 const morgan = require('morgan');
 const handlebars = require('express-handlebars');
 const route = require('./routes');
 const methodOverride = require('method-override');
+const socketio = require('socket.io');
 const app = express();
 const cookieParser = require('cookie-parser');
+const server = http.createServer(app);
+const io = socketio(server);
+const comment = require('./socket/comments');
 
 const port = 3000;
 app.use(cookieParser());
@@ -83,7 +88,16 @@ app.engine(
             isAllTrue: (a, b) => a && b,
         }
     }),
-    );
+);
+io.on('connection', socket => {
+    socket.on('joinProduct' , (user) => {
+        socket.join(user.productCode);
+    })
+    socket.on('message', ({ msg, userInfo }) => {
+        io.to(userInfo.productCode).emit('chatMessage', { msg: msg, userInfo });
+    });
+
+})
     
 // Dat cai ung dung su dung view engine la handlebars
 app.set('view engine', 'hbs');
@@ -93,50 +107,11 @@ app.set('views', path.join(__dirname, 'resources\\views'));
 // route init
 route(app);
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
 });
 
 module.exports = app;
-
-// const express = require('express');
-// const mysql = require('mysql');
-// const app = express();
-
-
-// const db = mysql.createConnection({
-//     host: 'localhost',
-//     user: 'root',
-//     password: '0865783836',
-//     database: 'sakila',
-// });
-
-// db.connect((err) => {
-//     if (err) {
-//         throw err;
-//     }
-//     console.log('MySQL connected...')
-// })
-
-// app.get('/createdb', (req, res) => {
-//     let sql = 'CREATE DATABASE nodemonsql';
-//     db.query(sql, (err, result) => {
-//         if (err) throw err;
-//         console.log(result);
-//         res.send('database Created');
-//     })
-// })
-
-
-// db.query('SELECT * FROM actor', function (error, results, fields) {
-//     if (error) throw error;
-//     console.log(results[0].first_name);
-//   });
-
-
-// app.listen('3000', () => {
-    
-// })
 
 
 

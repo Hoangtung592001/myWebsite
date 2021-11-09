@@ -4,6 +4,8 @@ const router = express.Router();
 
 const buyingController = require('../app/controllers/BuyingController');
 
+router.post('/:productCode/comment', isLoggedIn, buyingController.comment);
+
 router.get('/:productCode', isLoggedIn, buyingController.purchase);
 
 router.post('/add_to_cart/:productCode', isLoggedIn, buyingController.add_to_cart);
