@@ -7,7 +7,7 @@
         </div>
 
         <div class="grid__column-8">
-            <h1>{{productName}}</h1>
+            <h1 class="product-name">{{productName}}</h1>
             <div class="home-product-item__rating">
                 <i class="home-product-item__star--gold fas fa-star"></i>
                 <i class="home-product-item__star--gold fas fa-star"></i>
@@ -15,18 +15,18 @@
                 <i class="home-product-item__star--gold fas fa-star"></i>
                 <i class="fas fa-star"></i>
             </div>
-            <h3>{{values (discountValues buyPrice discount)}} đ</h3>
-            <h3>Số lượng còn trong kho: {{quantityInStock}}</h3>
+            <h3 class="product-price">{{values (discountValues buyPrice discount)}} đ</h3>
+            <h3 class="product-quantity-in-stock">Số lượng còn trong kho: {{quantityInStock}}</h3>
             <form method="POST" action="/buying/add_to_cart/{{productCode}}" id="formSubmitProduct">
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Số lượng</label>
+                <div class="form-group product-order">
+                    <label for="exampleInputEmail1">Nhập số lượng</label>
                     <input type="number" name="quantityOrdered" class="form-control" placeholder="Nhập số lượng">
                     <span class="warningInvalid"></span>
                 </div>
                 <button type="submit" class="home-filter__btn btn btn--primary">Mua Ngay</button>
             </form>
             <form action="/me/admin/deleteProduct/{{productCode}}?_method=DELETE" method="POST">
-                <button type="submit">Xóa sản phẩm</button>
+                <button type="submit" class="product-delete btn btn--primary">Xóa sản phẩm</button>
             </form>
         </div>
         {{/with}}
@@ -41,8 +41,11 @@
     <div class="comment-box">
         <h1>Đánh Giá Sản Phẩm</h1>
         {{#each commentProduct}}
-            <h4>{{this.name}}</h4>
-            <p>{{this.comment}}</p>
+            <div class="comment-box-personal">
+                <img class="header__navbar-user-avatar" src="../assets/images/avatar.png"/>
+                <span>{{this.name}}</span>
+                <p>{{this.comment}}</p>
+            </div>
         {{/each}}
     </div>
 </div>
@@ -89,10 +92,13 @@
         function outputMessage(user, message) {
             const h4 = document.createElement('h4');
             const p = document.createElement('p');
+            const div = document.createElement('div');
+            div.classList.add('comment-box-personal');
             h4.innerText = user;
             p.innerText = message;
-            commentBox.appendChild(h4);
-            commentBox.appendChild(p);
+            div.appendChild(h4);
+            div.appendChild(p);
+            commentBox.appendChild(div);
         }        
 
 

@@ -1,8 +1,10 @@
 <div class="grid">
     <div class="grid__row app__content">
-        <div class="grid__column-2">
+        <div class="grid__column-2 myInfo-nav-info">
             <h3>olegion2001</h3>
-            <a href=>Sửa hồ sơ</a>
+            <div>
+                <a href=>Sửa hồ sơ</a>
+            </div>
             <div>
                 <a href="">Tài khoản của tôi</a>   
             </div>
@@ -14,43 +16,45 @@
             </div>
         </div>
         
-        <div class="grid__column-10">
+        <div class="grid__column-10 myInfo-info">
             <h3>HỒ SƠ CỦA TÔI</h3>
             <h5>Quản lý thông tin hồ sơ để bảo mật tài khoản</h5>
             <form>
             {{#with user}}
-            <div class="form-group row">
-                <label for="staticEmail" class="col-sm-2 col-form-label">Tên Đăng Nhập</label>
-                <div class="col-sm-10">
-                <input type="text" class="form-control" id="staticEmail" value="{{username}}">
+            <div class="myInfo-change-box">
+                <div class="form-group row myInfo__change-info">
+                    <label for="staticEmail" class="col-sm-2 myInfo__change-info-label">Tên Đăng Nhập</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="myInfo__change-info-input" value={{username}} disabled>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group row">
-                <label for="inputPassword" class="col-sm-2 col-form-label">Tên</label>
-                <div class="col-sm-10">
-                <input type="text" class="form-control" id="inputPassword" value="{{name}}">
+                <div class="form-group row myInfo__change-info">
+                    <label for="inputPassword" class="col-sm-2 myInfo__change-info-label">Tên</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="myInfo__change-info-input" value={{name}}>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="form-group row">
-                <label for="staticEmail" class="col-sm-2 col-form-label">Tên Shop</label>
-                <div class="col-sm-10">
-                <input type="text" class="form-control" id="staticEmail" value="{{username}}">
+                
+                <div class="form-group row myInfo__change-info">
+                    <label for="staticEmail" class="col-sm-2 myInfo__change-info-label">Tên Shop</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="myInfo__change-info-input" value={{username}}>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group row">
-                <label for="staticEmail" class="col-sm-2 col-form-label">Vai Trò</label>
-                <div class="col-sm-10">
-                <input type="text" class="form-control" id="staticEmail" value="{{role}}">
+                <div class="form-group row myInfo__change-info">
+                    <label for="staticEmail" class="col-sm-2 myInfo__change-info-label">Vai Trò</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="myInfo__change-info-input" value={{role}} disabled>
+                    </div>
                 </div>
+                <button class="btn btn--primary" type="submit">
+                    Lưu
+                </button>
             </div>
            {{/with}}
 
-            <button type="submit">
-                Lưu
-            </button>
             </form>
         </div>
     </div>

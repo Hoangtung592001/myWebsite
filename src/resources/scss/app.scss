@@ -1528,5 +1528,168 @@ i.home-product-item__like-icon-fill {
 
 .warningInvalid {
     color: var(--primary-color);
+    font-size: 1.5rem;
 }
 
+.product-name {
+    font-weight: 450;
+    font-size: 3rem;
+}
+
+.product-price {
+    color: var(--primary-color);
+    font-size: 3rem;
+}
+
+.product-quantity-in-stock {
+    font-weight: 400;
+}
+
+.product-order label {
+    font-size: 1.5rem;
+}
+
+.product-order input {
+    height: 4rem;
+    font-size: 2rem;
+}
+
+.product-delete {
+    margin-top: 10px;
+}
+
+.form__comment label {
+    font-size: 1.5rem;
+}
+
+.form__comment input {
+    height: 4rem;
+    font-size: 2rem;
+}
+
+.comment-box-personal {
+    background-color: var(--white-color);
+}
+
+.comment-box-personal span {
+    font-size: 1.5rem;
+}
+
+.comment-box-personal p {
+    font-size: 2rem;
+}
+
+// myInfo
+
+.myInfo-nav-info {
+    
+}
+
+.myInfo-nav-info div {
+    margin-top: 5px;
+}
+
+.myInfo-nav-info div a {
+    display: block;
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 1.5rem;
+    margin-top: 10px;
+}
+
+.myInfo-nav-info div a:hover {
+    color: var(--primary-color);
+}
+
+.myInfo-nav-info h3 {
+    font-size: 2.5rem;
+}
+
+.myInfo-info {
+    background-color: var(--white-color);
+    padding: 20px 30px;
+}
+
+.myInfo-info h3 {
+    font-weight: 400;
+    margin-bottom: 5px;
+    font-size: 2rem;
+}
+
+.myInfo-info h5 {
+    font-weight: 400;
+    font-size: 1.5rem;
+}
+
+.myInfo-change-box {
+    margin: 40px 20px;
+}
+
+.myInfo__change-info {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.myInfo__change-info-label {
+    color: var(--text-color);
+    font-size: 1.6rem;
+}
+.myInfo__change-info-input {
+    height: 40px;
+    font-size: 1.6rem;
+    border: 1px solid var(--text-color);
+    border-radius: 3px;
+    width: 70%;
+}
+
+// sale
+
+.post-product-productline {
+    height: 40px;
+    width: 1000px;
+    font-size: 1.6rem;
+}
+
+.formSell {
+    padding: 50px 40px;
+    background-color: var(--white-color);
+}
+
+// user_list
+.table-user-list {
+    margin: 20px 20px;
+    
+}
+
+#deleteUserForm {
+    padding: 20px 20px;
+}
+
+.table-user-list thead th {
+    font-size: 1.5rem;
+}
+
+.table-user-list tbody td,
+.table-user-list tbody th
+{
+    font-size: 1.5rem;
+}
+
+// order
+.header__cart-list-item-inMyorder-ordered h3,
+.header__cart-list-item-inMyorder-purchased h3
+{
+    font-weight: 400;
+    margin: 10px 0;
+}
+
+.myOrder-btn-frame {
+    margin-left: 40px;
+}
+
+.cart-item-purchased img {
+    width: 40px;
+    height: 40px;
+    display: block;
+}

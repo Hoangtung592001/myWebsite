@@ -1,29 +1,27 @@
 <div class="grid">
     <div class="grid__row app__content">
-        <div class="grid__column-2">
+        <div class="grid__column-2 myInfo-nav-info">
             <h3>olegion2001</h3>
-            <a href=>Sửa hồ sơ</a>
+            <div>
+                <a href=>Sửa hồ sơ</a>
+            </div>
             <div>
                 <a href="">Tài khoản của tôi</a>   
             </div>
             <div>
-                <a href="">Hồ sơ</a>   
+                <a href="/me/change_password_site">Đổi mật khẩu</a>   
             </div>
             <div>
-                <a href="">Đổi mật khẩu</a>   
-            </div>
-            <div>
-                <a href="">Đơn mua</a>   
-            </div>
-            <div>
-                <a href="">Thông báo</a>
+                <a href="/me/order">Đơn mua</a>   
             </div>
         </div>
         
         <div class="grid__column-10">
-            <button class="home-filter__btn btn home-filter__btn-confirm">Chờ xác nhận</button>
-            <button class="home-filter__btn btn home-filter__btn-purchase">Đã mua</button>
             <form action="" id="confirm-purchase-form" method="POST">
+                <div class="myOrder-btn-frame">
+                    <button class="home-filter__btn btn home-filter__btn-confirm">Chờ xác nhận</button>
+                    <button class="home-filter__btn btn home-filter__btn-purchase">Đã mua</button>
+                </div>
                 <ul class="header__cart-list-item-inMyorder-ordered">
                     <h3>Sản phẩm trong giỏ hàng</h3>
                     <h4 class="no-product__warning"></h4>
@@ -56,15 +54,13 @@
                     {{#each totalCost}}
                     <h3>Tổng số tiền là: {{values this.totalCost}}</h3>
                     {{/each}}
-
                     <button class="home-filter__btn btn btn--primary home-filter__btn-confirm-purchase">Đặt Hàng</button>
                 </ul>
                 {{!-- purchasedProducts --}}
                 <ul class="header__cart-list-item-inMyorder-purchased">
                     <h3>Sản phẩm đã mua</h3>
-                      <!-- C -->
                     {{#each purchasedProducts}}
-                    <li class="header__cart-item">
+                    <li class="header__cart-item cart-item-purchased">
                         <img src="{{this.image}}" alt="" class="header__cart-img">
                         <div class="header__cart-item-info">
                             <div class="header__cart-item-head">

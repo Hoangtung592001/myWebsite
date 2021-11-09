@@ -1,29 +1,28 @@
-<table class="table">
-    <thead>
-        <tr>
-        
-        <th scope="col">tick</th>
-        <th scope="col">userId</th>
-        <th scope="col">username</th>
-        <th scope="col">password</th>
-        <th scope="col">Họ và Tên</th>
-        </tr>
-    </thead>
-    <form action="/me/delete/user?_method=DELETE" method="POST" id="deleteUserForm">
+<form action="/me/delete/user?_method=DELETE" method="POST" id="deleteUserForm">
+    <table class="table table-user-list">
+        <thead>
+            <tr>
+            <th scope="col">tick</th>
+            <th scope="col">userId</th>
+            <th scope="col">username</th>
+            <th scope="col">password</th>
+            <th scope="col">Họ và Tên</th>
+            </tr>
+        </thead>
         <tbody>
             {{#each users}}
             <tr>
             <td><input class="check-purchase" type="checkbox" value="{{this.userId}}" name="userId"></td>        
-            <th scope="row">{{this.userId}}</th>
+            <th>{{this.userId}}</th>
             <td>{{this.username}}</td>
             <td>{{this.password}}</td>
             <td>{{this.name}}</td>
             </tr>
             {{/each}}
         </tbody>
-        <button type="submit" class="btn btn-primary">Xóa người dùng</button>
-    </form>
-</table>
+    </table>
+    <button type="submit" class="btn btn--primary">Xóa người dùng</button>
+</form>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {

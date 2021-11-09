@@ -9,10 +9,10 @@ db.connect();
 class MeController {
     // [GET] /me
     myInfo(req, res, next) {
-        const user = req.user;
-        const sql = `SELECT * FROM users WHERE users.userId = ${user.userId}`;
+        const sql = `SELECT * FROM users WHERE users.userId = ${req.user.userId}`;
         db.query(sql, (err, user) => {
-            res.render('me/info', { user: user });
+            user = Array.from(user)[0];
+            res.render('me/info', { user: user });  
         })
     }
 
