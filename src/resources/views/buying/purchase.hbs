@@ -90,13 +90,17 @@
             outputMessage(userInfo.name, msg);
         });
         function outputMessage(user, message) {
-            const h4 = document.createElement('h4');
+            const span = document.createElement('span');
             const p = document.createElement('p');
             const div = document.createElement('div');
+            const img = document.createElement('img');
+            img.classList.add('header__navbar-user-avatar');
+            img.src = '../assets/images/avatar.png';
             div.classList.add('comment-box-personal');
-            h4.innerText = user;
+            span.innerText = user;
             p.innerText = message;
-            div.appendChild(h4);
+            div.appendChild(img);
+            div.appendChild(span);
             div.appendChild(p);
             commentBox.appendChild(div);
         }        
