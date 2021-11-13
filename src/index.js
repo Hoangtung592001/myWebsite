@@ -89,6 +89,7 @@ app.engine(
         }
     }),
 );
+
 io.on('connection', socket => {
     socket.on('joinProduct' , (user) => {
         socket.join(user.productCode);

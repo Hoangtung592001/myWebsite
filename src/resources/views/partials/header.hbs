@@ -61,7 +61,7 @@
                     <li class="header__navbar-user-item">
                         <a href="/me/store">Sản phẩm của tôi</a>
                     </li>
-                    <li class="header__navbar-user-item">
+                    <li class="header__navbar-user-item header__navbar-user-item-listuser">
                         <a href="/me/user_list">Danh sách các người dùng</a>
                     </li>
                     <li class="header__navbar-user-item">
@@ -188,6 +188,8 @@
     document.addEventListener("DOMContentLoaded", function() {
         const headerCartListItem = document.querySelector('.header__cart-list-item');
         const headerCartQuantity = document.querySelector('.header__cart-notice');
+        const listUser = document.querySelector('.header__navbar-user-item-listuser');
+        console.log(listUser);
         fetch("http://localhost:3000/me/added_to_cart")
         .then(res => res.json())
         .then(data => {
@@ -227,6 +229,13 @@
         .catch(err => {
             headerCartQuantity.innerText = "0";
         })
-        }
-    )
+
+        fetch('http://localhost:3000/isAdmin')
+            .then(res => res.json())
+            .then(isAdmin => {
+                if (!isAdmin.isAdmin) {
+                    listUser.style.display = "none";
+                }
+            });
+    })
 </script>

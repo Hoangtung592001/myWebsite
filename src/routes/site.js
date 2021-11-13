@@ -4,6 +4,8 @@ const router = express.Router();
 
 const siteController = require('../app/controllers/SiteController');
 
+router.get('/isAdmin', isLoggedIn, siteController.isAdmin);
+
 router.get('/get_user', isLoggedIn, siteController.getUser);
 
 router.post('/signup', siteController.signup);

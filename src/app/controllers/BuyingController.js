@@ -2,26 +2,24 @@ const db = require('../models/Buying');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 
-
-
-// const mysql = require('mysql');
-// const db = mysql.createConnection({
-//     host     : 'localhost',
-//     user     : 'root',
-//     password : '0865783836',
-//     database : 'sellingwebsite'
-// });
 db.connect();
 
 class BuyingController {
     // [GET] /buying/:id
     purchase(req, res, next) {
+        /*
+        SELECT * FROM products p, comments c
+        FORCE INDEX (comment_productCode)
+        JOIN users u ON c.customerId = u.userId
+        WHERE p.productCode = c.productCode
+        AND p.productCode = "${req.params.productCode}"`
+        */
         const productSql = 'SELECT * FROM products p' + 
         ` WHERE p.productCode = "${req.params.productCode}"`;
         const commentSql = `SELECT * FROM products p` +
         ` JOIN comments c ON p.productCode = c.productCode` +
         ` JOIN users u ON c.customerId = u.userId` + 
-        ` WHERE p.productCode = "${req.params.productCode}"`;
+        ` WHERE p.productCode = "${req.params.productCode}" ORDER BY c.comment_id`;
         db.query(productSql, function(err, product) {
             // res.json({product: product});
             product = Array.from(product)[0];
@@ -35,7 +33,7 @@ class BuyingController {
         const productCode = req.body.productCode;
         const customerId = Number(req.user.userId);
         const comment = req.body.comment;
-        const sql = `INSERT INTO comments VALUES(${customerId}, "${productCode}", "${comment}")`;
+        const sql = `INSERT INTO comments VALUES(${customerId}, "${productCode}", "${comment}", NULL)`;
         db.query(sql);
     }
     
@@ -60,6 +58,7 @@ class BuyingController {
                         const totalQuantity = Number(alikeProduct[0].quantityOrdered) + Number(req.body.quantityOrdered);
                         const updateSQL = `
                             UPDATE ordercart o
+                            FORCE INDEX(ordercart_productCode)
                             SET o.quantityOrdered = ${totalQuantity}
                             WHERE o.productCode = "${req.params.productCode}" AND o.customerId = ${req.user.userId}`;
                         db.query(updateSQL, (err, result) => {

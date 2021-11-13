@@ -3,19 +3,10 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const paginating = require('../function/pagination');
 
-
-// const mysql = require('mysql');
-// const db = mysql.createConnection({
-//     host     : 'localhost',
-//     user     : 'root',
-//     password : '0865783836',
-//     database : 'sellingwebsite'
-// });
 db.connect();
 
 class SiteController {
     // [GET] /
-    
     index(req, res, next) {
         // req, res, next, sql, home
         if (req.query.hasOwnProperty('sort')) {
@@ -113,6 +104,15 @@ class SiteController {
 
     getUser(req, res, next) {
         res.json({ user: req.user });
+    }
+
+    isAdmin(req, res, next) {
+        const SQL = `SELECT * FROM users WHERE userId = ${req.user.userId}`;
+        db.query(SQL, (err, result) => {
+            if (err) throw err;
+            result = Array.from(result)[0];
+            res.json({ isAdmin: result.role === 'admin' });  
+        })
     }
 
 }

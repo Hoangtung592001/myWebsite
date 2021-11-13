@@ -17,6 +17,7 @@ class MeController {
     }
 
     // [GET] /me/order
+
     order(req, res, next) {
         const user = req.user;        
         const conFirmSql = `SELECT *, sum(o.quantityOrdered) as quantity FROM ordercart o` +
